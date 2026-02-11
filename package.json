@@ -1,0 +1,24 @@
+{
+  "name": "airbnb-clone",
+  "version": "1.0.0",
+  "description": "Clone de airbnb développé par Dev & Co Team.",
+  "homepage": "https://github.com/hackadil/airbnb-clone#readme",
+  "bugs": {
+    "url": "https://github.com/hackadil/airbnb-clone/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hackadil/airbnb-clone.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "tailwindcss": "^4.1.18"
+  }
+}
