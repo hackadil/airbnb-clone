@@ -36,6 +36,9 @@ async function loadPropertyDetails(id) {
         // Setup favorite button
         setupFavoriteButton(listing.id);
 
+        // Setup share button
+        setupShareButton(listing);
+
     } catch (error) {
         console.error('Error loading property:', error);
         if (loadingState) loadingState.classList.add('hidden');
@@ -210,21 +213,81 @@ function setupFavoriteButton(listingId) {
 
     // Update button appearance
     const icon = favBtn.querySelector('i');
+    const text = favBtn.querySelector('span');
+    
     if (isFavorite) {
         icon.classList.remove('far');
         icon.classList.add('fas', 'text-[#FF385C]');
+        text.textContent = 'Enregistré';
     }
 
     favBtn.addEventListener('click', () => {
-        ListingCard.toggleFavorite(parseInt(listingId));
+        // Vérifier si connecté
+        if (!API.isAuthenticated()) {
+            if (confirm('Connectez-vous pour enregistrer ce logement. Aller à la page de connexion ?')) {
+                window.location.href = `connexion.html?redirect=${encodeURIComponent(window.location.href)}`;
+            }
+            return;
+        }
+
+        const favorites = JSON.parse(localStorage.getItem('airbnb_favorites') || '[]');
+        const index = favorites.indexOf(parseInt(listingId));
         
-        // Toggle icon
-        if (icon.classList.contains('far')) {
-            icon.classList.remove('far');
-            icon.classList.add('fas', 'text-[#FF385C]');
-        } else {
+        if (index > -1) {
+            // Retirer
+            favorites.splice(index, 1);
             icon.classList.remove('fas', 'text-[#FF385C]');
             icon.classList.add('far');
+            text.textContent = 'Enregistrer';
+            Utils.showToast('Retiré des favoris');
+        } else {
+            // Ajouter
+            favorites.push(parseInt(listingId));
+            icon.classList.remove('far');
+            icon.classList.add('fas', 'text-[#FF385C]');
+            text.textContent = 'Enregistré';
+            Utils.showToast('Enregistré dans vos favoris ❤️');
+        }
+        
+        localStorage.setItem('airbnb_favorites', JSON.stringify(favorites));
+    });
+}
+
+function setupShareButton(listing) {
+    const shareBtn = document.querySelector('.fa-share-alt')?.parentElement;
+    if (!shareBtn) return;
+
+    shareBtn.addEventListener('click', async () => {
+        const shareData = {
+            title: listing.title,
+            text: `Découvrez ce logement : ${listing.title} à ${listing.city}`,
+            url: window.location.href
+        };
+
+        // Utiliser l'API Web Share si disponible
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+                Utils.showToast('Partagé avec succès !');
+            } catch (err) {
+                // L'utilisateur a annulé ou erreur
+                console.log('Partage annulé');
+            }
+        } else {
+            // Fallback : copier le lien dans le presse-papiers
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+                Utils.showToast('Lien copié dans le presse-papiers !');
+            } catch (err) {
+                // Dernier recours : sélectionner le texte
+                const dummy = document.createElement('input');
+                document.body.appendChild(dummy);
+                dummy.value = window.location.href;
+                dummy.select();
+                document.execCommand('copy');
+                document.body.removeChild(dummy);
+                Utils.showToast('Lien copié dans le presse-papiers !');
+            }
         }
     });
 }

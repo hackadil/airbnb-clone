@@ -84,9 +84,9 @@ class ListingCard {
                     ${this.getImageGallery()}
                     
                     <!-- Favorite Button -->
-                    <button onclick="event.stopPropagation(); listingCard.toggleFavorite(${this.listing.id})" 
-                            class="absolute top-3 right-3 z-10 heart-animation">
-                        <i class="${heartIcon} ${heartColor} ${heartBg} text-2xl"></i>
+                    <button onclick="event.stopPropagation(); listingCard.toggleFavorite(${this.listing.id}, this)" 
+                            class="absolute top-3 right-3 z-10 heart-animation bg-transparent border-none p-0">
+                        <i class="${heartIcon} ${heartColor} ${heartBg} text-2xl drop-shadow-md" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));"></i>
                     </button>
 
                     ${this.showRemoveButton ? `
@@ -124,46 +124,57 @@ class ListingCard {
     }
 
     // Static methods for event handling
-    static toggleFavorite(id) {
-        const favorites = JSON.parse(localStorage.getItem('airbnb_favorites') || '[]');
+    static toggleFavorite(id, btnElement) {
+        // Vérifier si connecté
+        if (!API.isAuthenticated()) {
+            if (confirm('Connectez-vous pour ajouter aux favoris. Aller à la page de connexion ?')) {
+                window.location.href = 'connexion.html?redirect=' + encodeURIComponent(window.location.href);
+            }
+            return;
+        }
+
+        let favorites = JSON.parse(localStorage.getItem('airbnb_favorites') || '[]');
         const index = favorites.indexOf(id);
         
+        // Trouver l'icône
+        const icon = btnElement ? btnElement.querySelector('i') : null;
+        
         if (index > -1) {
+            // Retirer des favoris
             favorites.splice(index, 1);
             showToast('Retiré des favoris');
+            
+            // Mettre à jour l'icône
+            if (icon) {
+                icon.classList.remove('fas', 'text-[#FF385C]');
+                icon.classList.add('far', 'text-white');
+            }
         } else {
+            // Ajouter aux favoris
             favorites.push(id);
-            showToast('Ajouté aux favoris');
+            showToast('Ajouté aux favoris ❤️');
+            
+            // Mettre à jour l'icône
+            if (icon) {
+                icon.classList.remove('far', 'text-white');
+                icon.classList.add('fas', 'text-[#FF385C]');
+            }
         }
         
         localStorage.setItem('airbnb_favorites', JSON.stringify(favorites));
         
-        // Refresh display if on favorites page
+        // Si on est sur la page favoris, recharger
         if (window.location.pathname.includes('favoris')) {
             window.location.reload();
-        } else {
-            // Update heart icon
-            const btn = event.target.closest('button');
-            const icon = btn.querySelector('i');
-            if (index > -1) {
-                icon.classList.remove('fas', 'text-[#FF385C]');
-                icon.classList.add('far', 'text-white', 'drop-shadow-lg');
-            } else {
-                icon.classList.remove('far', 'text-white', 'drop-shadow-lg');
-                icon.classList.add('fas', 'text-[#FF385C]');
-            }
         }
     }
 
     static remove(id) {
         if (confirm('Retirer ce logement de vos favoris ?')) {
-            const favorites = JSON.parse(localStorage.getItem('airbnb_favorites') || '[]');
-            const index = favorites.indexOf(id);
-            if (index > -1) {
-                favorites.splice(index, 1);
-                localStorage.setItem('airbnb_favorites', JSON.stringify(favorites));
-                window.location.reload();
-            }
+            let favorites = JSON.parse(localStorage.getItem('airbnb_favorites') || '[]');
+            favorites = favorites.filter(favId => favId !== id);
+            localStorage.setItem('airbnb_favorites', JSON.stringify(favorites));
+            window.location.reload();
         }
     }
 
@@ -185,11 +196,20 @@ class ListingCard {
 
 // Toast notification helper
 function showToast(message) {
+    // Supprimer les toasts existants
+    const existingToasts = document.querySelectorAll('.toast-notification');
+    existingToasts.forEach(t => t.remove());
+
     const toast = document.createElement('div');
-    toast.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in';
+    toast.className = 'toast-notification fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in';
+    toast.style.animation = 'slideInUp 0.3s ease';
     toast.textContent = message;
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2000);
+    
+    setTimeout(() => {
+        toast.style.animation = 'slideOutDown 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 2000);
 }
 
 // Make available globally

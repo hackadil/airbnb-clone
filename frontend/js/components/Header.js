@@ -20,6 +20,17 @@ class Header {
         window.location.reload();
     }
 
+    // Redirection vers page hôte
+    becomeHost() {
+        if (!this.isLoggedIn) {
+            alert('Veuillez vous connecter pour devenir hôte');
+            window.location.href = 'connexion.html?redirect=' + encodeURIComponent(window.location.href);
+            return;
+        }
+        alert('Fonctionnalité "Devenir hôte" - À implémenter avec le backend');
+        // window.location.href = '/devenir-hote.html';
+    }
+
     render() {
         const header = document.createElement('header');
         header.className = 'border-b border-gray-200 py-4 sticky top-0 bg-white z-50';
@@ -41,9 +52,9 @@ class Header {
 
                 <!-- Right Side -->
                 <div class="flex items-center space-x-4">
-                    <a href="#" class="hidden md:block font-medium hover:bg-gray-100 px-4 py-2 rounded-full transition">
+                    <button onclick="header.becomeHost()" class="hidden md:block font-medium hover:bg-gray-100 px-4 py-2 rounded-full transition">
                         Devenir hôte
-                    </a>
+                    </button>
                     
                     <!-- Language -->
                     <button class="hidden md:flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-full transition">
@@ -74,14 +85,14 @@ class Header {
                                 <a href="#" class="block px-4 py-2 hover:bg-gray-100">Messages</a>
                                 <div class="border-t border-gray-100 my-1"></div>
                                 <a href="#" class="block px-4 py-2 hover:bg-gray-100">Compte</a>
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Devenir hôte</a>
+                                <button onclick="header.becomeHost()" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Devenir hôte</button>
                                 <div class="border-t border-gray-100 my-1"></div>
                                 <button onclick="header.logout()" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Déconnexion</button>
                             ` : `
                                 <a href="connexion.html" class="block px-4 py-2 font-semibold hover:bg-gray-100">Inscription</a>
                                 <a href="connexion.html" class="block px-4 py-2 hover:bg-gray-100">Connexion</a>
                                 <div class="border-t border-gray-100 my-1"></div>
-                                <a href="#" class="block px-4 py-2 hover:bg-gray-100">Louer mon logement</a>
+                                <button onclick="header.becomeHost()" class="block w-full text-left px-4 py-2 hover:bg-gray-100">Louer mon logement</button>
                                 <a href="#" class="block px-4 py-2 hover:bg-gray-100">Organiser une expérience</a>
                                 <a href="#" class="block px-4 py-2 hover:bg-gray-100">Aide</a>
                             `}
