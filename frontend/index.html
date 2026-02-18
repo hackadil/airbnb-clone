@@ -3,15 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AfroStay</title>
+    <title>Airbnb Clone - Accueil</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hero-gradient { background: linear-gradient(135deg, #FF385C 0%, #E31C5F 100%); }
+        .search-shadow { box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        .card-hover:hover { transform: translateY(-4px); }
+        .heart-animation { transition: transform 0.2s; }
+        .heart-animation:hover { transform: scale(1.2); }
+        .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-white">
+    <!-- Header -->
+    <div id="header-container"></div>
+    
+    <!-- Hero Section with Large Search Bar -->
+    <section class="relative h-[600px] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 hero-gradient"></div>
+        <div class="absolute inset-0 opacity-20" style="background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1920'); background-size: cover; background-position: center;"></div>
+        
+        <div class="relative z-10 w-full max-w-4xl px-4">
+            <h1 class="text-4xl md:text-6xl font-bold text-white text-center mb-8">Trouvez votre prochain séjour</h1>
+            <p class="text-xl text-white text-center mb-8 opacity-90">Des logements uniques et des expériences authentiques</p>
+            
+            <!-- Large Search Bar Component -->
+            <div id="hero-searchbar"></div>
+        </div>
+    </section>
 
-    <h1 class="text-3xl font-bold text-center mt-10">
-        Bienvenue sur AfroStay-airbnbclone 🌍
-    </h1>
+    <!-- Categories -->
+    <section class="sticky top-0 bg-white z-40 border-b border-gray-200 py-4">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex space-x-8 overflow-x-auto scrollbar-hide" id="categories">
+                <button class="flex flex-col items-center space-y-2 min-w-[64px] pb-2 border-b-2 border-black">
+                    <i class="fas fa-umbrella-beach text-2xl"></i>
+                    <span class="text-xs font-medium">Plage</span>
+                </button>
+                <button class="flex flex-col items-center space-y-2 min-w-[64px] pb-2 border-b-2 border-transparent hover:border-gray-300 text-gray-500">
+                    <i class="fas fa-mountain text-2xl"></i>
+                    <span class="text-xs font-medium">Montagne</span>
+                </button>
+                <button class="flex flex-col items-center space-y-2 min-w-[64px] pb-2 border-b-2 border-transparent hover:border-gray-300 text-gray-500">
+                    <i class="fas fa-tree text-2xl"></i>
+                    <span class="text-xs font-medium">Campagne</span>
+                </button>
+                <button class="flex flex-col items-center space-y-2 min-w-[64px] pb-2 border-b-2 border-transparent hover:border-gray-300 text-gray-500">
+                    <i class="fas fa-city text-2xl"></i>
+                    <span class="text-xs font-medium">Ville</span>
+                </button>
+                <button class="flex flex-col items-center space-y-2 min-w-[64px] pb-2 border-b-2 border-transparent hover:border-gray-300 text-gray-500">
+                    <i class="fas fa-swimming-pool text-2xl"></i>
+                    <span class="text-xs font-medium">Piscine</span>
+                </button>
+                <button class="flex flex-col items-center space-y-2 min-w-[64px] pb-2 border-b-2 border-transparent hover:border-gray-300 text-gray-500">
+                    <i class="fas fa-campground text-2xl"></i>
+                    <span class="text-xs font-medium">Camping</span>
+                </button>
+            </div>
+        </div>
+    </section>
 
-    <script src="js/main.js"></script>
+    <!-- Listings Grid -->
+    <section class="max-w-7xl mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold mb-6">Logements disponibles</h2>
+        <div id="listings-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Cards will be injected here -->
+        </div>
+        <div id="loading-skeleton" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Skeleton loaders -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 mt-16 py-12">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h4 class="font-bold mb-4">À propos</h4>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li><a href="#" class="hover:underline">Fonctionnement</a></li>
+                    <li><a href="#" class="hover:underline">Newsroom</a></li>
+                    <li><a href="#" class="hover:underline">Investisseurs</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Communauté</h4>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li><a href="#" class="hover:underline">Accessibilité</a></li>
+                    <li><a href="#" class="hover:underline">Assistance</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Hôte</h4>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li><a href="#" class="hover:underline">Devenir hôte</a></li>
+                    <li><a href="#" class="hover:underline">Ressources</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4">Assistance</h4>
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li><a href="#" class="hover:underline">Centre d'aide</a></li>
+                    <li><a href="#" class="hover:underline">Options d'annulation</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 mt-8 pt-8 border-t border-gray-300 text-sm text-gray-600">
+            © 2024 Airbnb Clone. Tous droits réservés.
+        </div>
+    </footer>
+
+    <script src="js/components/Header.js"></script>
+    <script src="js/components/SearchBar.js"></script>
+    <script src="js/components/ListingCard.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/index.js"></script>
 </body>
 </html>

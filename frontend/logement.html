@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail du logement - Airbnb Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .image-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8px; height: 400px; }
+        .image-main { grid-row: 1 / 3; border-radius: 12px 0 0 12px; }
+        .image-sub { border-radius: 0; }
+        .image-sub:last-child { border-radius: 0 12px 12px 0; }
+        .amenity-icon { width: 24px; text-align: center; }
+        .sticky-booking { position: sticky; top: 100px; }
+        .review-bar { height: 4px; background: #ddd; border-radius: 2px; }
+        .review-fill { height: 100%; background: #222; border-radius: 2px; }
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Header -->
+    <div id="header-container"></div>
+
+    <!-- Property Detail -->
+    <main class="max-w-6xl mx-auto px-4 py-6" id="property-container">
+        <!-- Loading State -->
+        <div id="loading-state" class="animate-pulse">
+            <div class="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
+            <div class="h-6 bg-gray-200 rounded w-1/2 mb-6"></div>
+            <div class="h-96 bg-gray-200 rounded-xl mb-8"></div>
+        </div>
+        
+        <!-- Content will be injected here -->
+        <div id="property-content" class="hidden">
+            <!-- Title Section -->
+            <div class="mb-6">
+                <h1 class="text-3xl font-bold mb-2" id="property-title">Titre du logement</h1>
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center space-x-4 text-sm">
+                        <span class="flex items-center">
+                            <i class="fas fa-star text-[#FF385C] mr-1"></i>
+                            <span id="property-rating" class="font-semibold">4.92</span>
+                            <span class="text-gray-500 ml-1">· <span id="property-reviews">128 commentaires</span></span>
+                        </span>
+                        <span class="text-gray-500">·</span>
+                        <span id="property-location" class="underline font-medium cursor-pointer">Paris, France</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="flex items-center space-x-2 hover:bg-gray-100 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-share-alt"></i>
+                            <span class="underline font-medium">Partager</span>
+                        </button>
+                        <button id="favorite-btn" class="flex items-center space-x-2 hover:bg-gray-100 px-3 py-2 rounded-lg transition">
+                            <i class="far fa-heart text-[#FF385C]"></i>
+                            <span class="underline font-medium">Enregistrer</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Gallery -->
+            <div class="image-grid mb-8" id="image-gallery">
+                <!-- Images injected here -->
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <!-- Left Column -->
+                <div class="lg:col-span-2">
+                    <!-- Host Info -->
+                    <div class="flex items-center justify-between pb-6 border-b border-gray-200">
+                        <div>
+                            <h2 class="text-xl font-semibold mb-1">Logement entier · <span id="property-type">Appartement</span></h2>
+                            <p class="text-gray-600"><span id="property-guests">4 voyageurs</span> · <span id="property-bedrooms">2 chambres</span> · <span id="property-beds">2 lits</span> · <span id="property-bathrooms">1 salle de bain</span></p>
+                        </div>
+                        <img id="host-avatar" src="" alt="Host" class="w-14 h-14 rounded-full object-cover">
+                    </div>
+
+                    <!-- Highlights -->
+                    <div class="py-6 border-b border-gray-200 space-y-4">
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-medal text-2xl text-gray-700 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold">Superhôte</h3>
+                                <p class="text-gray-600 text-sm">Hôte expérimenté avec d'excellentes évaluations</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-key text-2xl text-gray-700 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold">Arrivée autonome</h3>
+                                <p class="text-gray-600 text-sm">Accédez au logement avec une boîte à clé sécurisée</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-calendar-check text-2xl text-gray-700 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold">Annulation gratuite pendant 48h</h3>
+                                <p class="text-gray-600 text-sm">Remboursement complet si vous annulez dans les 48h</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="py-6 border-b border-gray-200">
+                        <p id="property-description" class="text-gray-700 leading-relaxed">
+                            Description du logement...
+                        </p>
+                        <button class="mt-4 font-semibold underline flex items-center">
+                            En savoir plus <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                        </button>
+                    </div>
+
+                    <!-- Amenities -->
+                    <div class="py-6 border-b border-gray-200">
+                        <h2 class="text-xl font-semibold mb-4">Ce que propose ce logement</h2>
+                        <div class="grid grid-cols-2 gap-4" id="amenities-list">
+                            <!-- Amenities injected here -->
+                        </div>
+                        <button class="mt-6 px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition">
+                            Afficher les 24 équipements
+                        </button>
+                    </div>
+
+                    <!-- Reviews -->
+                    <div class="py-6 border-b border-gray-200">
+                        <div class="flex items-center mb-6">
+                            <i class="fas fa-star text-[#FF385C] mr-2"></i>
+                            <h2 class="text-xl font-semibold"><span id="review-rating">4.92</span> · <span id="review-count">128 commentaires</span></h2>
+                        </div>
+                        
+                        <!-- Rating Breakdown -->
+                        <div class="grid grid-cols-2 gap-4 mb-6" id="rating-breakdown">
+                            <!-- Rating bars injected here -->
+                        </div>
+
+                        <!-- Reviews List -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="reviews-list">
+                            <!-- Reviews injected here -->
+                        </div>
+                        <button class="mt-6 px-6 py-3 border border-black rounded-lg font-semibold hover:bg-gray-50 transition">
+                            Afficher les 128 commentaires
+                        </button>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="py-6">
+                        <h2 class="text-xl font-semibold mb-4">Où se situe le logement</h2>
+                        <p id="location-address" class="text-gray-600 mb-4">Paris, Île-de-France, France</p>
+                        <div class="h-64 bg-gray-200 rounded-xl flex items-center justify-center">
+                            <div class="text-center text-gray-500">
+                                <i class="fas fa-map-marked-alt text-4xl mb-2"></i>
+                                <p>Carte interactive</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Booking Card -->
+                <div class="lg:col-span-1">
+                    <div class="sticky-booking border border-gray-300 rounded-xl p-6 shadow-lg">
+                        <div class="flex items-baseline justify-between mb-6">
+                            <div>
+                                <span class="text-2xl font-bold" id="booking-price">85€</span>
+                                <span class="text-gray-600"> / nuit</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <i class="fas fa-star text-[#FF385C] mr-1"></i>
+                                <span class="font-semibold" id="booking-rating">4.92</span>
+                            </div>
+                        </div>
+
+                        <!-- Booking Form -->
+                        <div class="border border-gray-300 rounded-lg overflow-hidden mb-4">
+                            <div class="grid grid-cols-2 border-b border-gray-300">
+                                <div class="p-3 border-r border-gray-300">
+                                    <label class="block text-xs font-bold uppercase">Arrivée</label>
+                                    <input type="date" id="checkin-date" class="w-full text-sm outline-none">
+                                </div>
+                                <div class="p-3">
+                                    <label class="block text-xs font-bold uppercase">Départ</label>
+                                    <input type="date" id="checkout-date" class="w-full text-sm outline-none">
+                                </div>
+                            </div>
+                            <div class="p-3 relative">
+                                <label class="block text-xs font-bold uppercase">Voyageurs</label>
+                                <select id="guests-select" class="w-full text-sm outline-none bg-transparent">
+                                    <option value="1">1 voyageur</option>
+                                    <option value="2" selected>2 voyageurs</option>
+                                    <option value="3">3 voyageurs</option>
+                                    <option value="4">4 voyageurs</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button id="book-btn" class="w-full py-3 bg-[#FF385C] text-white font-bold rounded-lg hover:bg-[#E31C5F] transition mb-4">
+                            Réserver
+                        </button>
+                        <p class="text-center text-gray-500 text-sm mb-6">Aucun montant ne vous sera débité pour l'instant</p>
+
+                        <!-- Price Breakdown -->
+                        <div class="space-y-3 text-sm border-b border-gray-200 pb-4 mb-4">
+                            <div class="flex justify-between">
+                                <span class="underline" id="price-breakdown-nights">85€ x 5 nuits</span>
+                                <span id="price-subtotal">425€</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="underline">Frais de service</span>
+                                <span id="price-fees">58€</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between font-bold text-lg">
+                            <span>Total</span>
+                            <span id="price-total">483€</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Error State -->
+        <div id="error-state" class="hidden text-center py-16">
+            <i class="fas fa-exclamation-circle text-6xl text-red-400 mb-4"></i>
+            <h3 class="text-xl font-semibold mb-2">Logement introuvable</h3>
+            <p class="text-gray-600 mb-4">Ce logement n'existe pas ou a été supprimé</p>
+            <a href="index.html" class="px-6 py-3 bg-[#FF385C] text-white rounded-lg font-medium hover:bg-[#E31C5F] transition inline-block">
+                Retour à l'accueil
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 mt-16 py-8">
+        <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-600">
+            © 2024 Airbnb Clone. Tous droits réservés.
+        </div>
+    </footer>
+
+    <script src="js/components/Header.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/logement.js"></script>
+</body>
+</html>
